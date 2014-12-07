@@ -3,12 +3,14 @@ PROJECT_DIR=/opt/symfony
 MAKEFILE_DIR=$(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 
 COMPOSER=docker run -it --rm -v $(MAKEFILE_DIR)/php-fpm/symfony:/opt/workspace pseiffert/composer
+SYMFONY=docker run -it --rm -v $(MAKEFILE_DIR)/php-fpm/symfony:/opt/workspace --entrypoint php pseiffert/php-cli app/console
 
 .PHONY=all build run-dev push stop-dev rm-dev install-dependencies
 
 all: build
 
-build: install-dependencies
+build: install-dependencies dump-assets
+	cp -R php-fpm/symfony/web/bundles nginx/assets/
 	docker build -t $(REGISTRY)/symfony-nginx nginx
 	docker build -t $(REGISTRY)/symfony-fpm php-fpm
 
@@ -23,6 +25,9 @@ push: build
 install-dependencies:
 	$(COMPOSER) install
 
+dump-assets:
+	$(SYMFONY) assets:install
+
 stop-dev:
 	docker stop nginx > /dev/null 2> /dev/null && \
 		echo "Stopped Nginx container" || \
@@ -30,7 +35,7 @@ stop-dev:
 	docker stop fpm > /dev/null 2> /dev/null && \
 		echo "Stopped PHP-FPM container" || \
 		echo "PHP-FPM not running"
-	
+
 rm-dev:
 	docker rm nginx > /dev/null 2> /dev/null && \
 		echo "Removed Nginx container" || \
