@@ -1,0 +1,24 @@
+{
+    "app_name": "symfony",
+    "services": [
+        {
+            "service_name": "webapp",
+            "components": [
+                {
+                    "component_name": "fpm",
+                    "image": "registry.giantswarm.io/seiffert/symfony-fpm",
+                    "ports": [ "9000/tcp" ]
+                },
+                {
+                    "component_name": "nginx",
+                    "image": "registry.giantswarm.io/seiffert/symfony-nginx",
+                    "ports": [ "80/tcp" ],
+                    "dependencies": [
+                        { "name": "fpm", "port": 9000 }
+                    ],
+                    "domains": { "symfony.alpha.giantswarm.io": "80" }
+                }
+            ]
+        }
+    ]
+}
