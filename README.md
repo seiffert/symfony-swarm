@@ -20,6 +20,13 @@ To **run** the application **locally**, use
 
 	make run-dev
 
+This will start both, the PHP-FPM and the Nginx container. The nginx container's port 80 will be mapped to the local port 8000. You can access the application at [http://localhost:8000](http://localhost:8000).
+
 To **push** the application to Giant Swarm's private registry, use
 
 	make push
+
+To **start** the application **on Giant Swarm**, use the `swarm` tool which can be [downloaded from the Docs](http://docs.giantswarm.io/installation/gettingstarted/).
+
+	swarm create swarm.json
+	swarm start symfony
