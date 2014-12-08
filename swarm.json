@@ -7,7 +7,8 @@
                 {
                     "component_name": "fpm",
                     "image": "registry.giantswarm.io/seiffert/symfony-fpm",
-                    "ports": [ "9000/tcp" ]
+                    "ports": [ "9000/tcp" ],
+                    "scaling_policy": {"min": 3}
                 },
                 {
                     "component_name": "nginx",
@@ -16,7 +17,8 @@
                     "dependencies": [
                         { "name": "fpm", "port": 9000 }
                     ],
-                    "domains": { "symfony.alpha.giantswarm.io": "80" }
+                    "scaling_policy": {"min": 3},
+                    "domains": { "symfony.alpha.gigantic.io": "80" }
                 }
             ]
         }
